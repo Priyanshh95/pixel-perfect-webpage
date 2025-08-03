@@ -42,7 +42,7 @@
                 <div class="hero-content">
                     <h1 class="hero-title">Welcome to JTG</h1>
                     <p class="hero-description">Your trusted partner in digital solutions</p>
-                    <button class="hero-cta">Get Started</button>
+                                         <button class="hero-cta" onclick="openContactModal()">Get Started</button>
                 </div>
             </div>
         </section>
@@ -69,27 +69,30 @@
             <div class="container">
                 <h2 class="section-title">Our Services</h2>
                 <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-1-icon.svg" alt="Web Development Icon">
-                        </div>
-                        <h3 class="service-title">Web Development</h3>
-                        <p class="service-description">Custom web solutions tailored to your needs.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-2-icon.svg" alt="Mobile Apps Icon">
-                        </div>
-                        <h3 class="service-title">Mobile Apps</h3>
-                        <p class="service-description">Native and cross-platform mobile applications.</p>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-3-icon.svg" alt="UI/UX Design Icon">
-                        </div>
-                        <h3 class="service-title">UI/UX Design</h3>
-                        <p class="service-description">Beautiful and intuitive user experiences.</p>
-                    </div>
+                                         <div class="service-card" onclick="openServiceModal('Web Development', 'Custom web solutions tailored to your business needs. We create responsive, modern websites that drive results.', ['Responsive Design', 'SEO Optimization', 'Performance Optimization', 'Content Management', 'E-commerce Solutions', 'API Integration'])">
+                         <div class="service-icon">
+                             <img src="assets/images/services/service-1-icon.svg" alt="Web Development Icon">
+                         </div>
+                         <h3 class="service-title">Web Development</h3>
+                         <p class="service-description">Custom web solutions tailored to your needs.</p>
+                         <button class="service-cta-btn">Learn More</button>
+                     </div>
+                     <div class="service-card" onclick="openServiceModal('Mobile Apps', 'Native and cross-platform mobile applications that deliver exceptional user experiences across all devices.', ['Native iOS & Android', 'Cross-platform Development', 'App Store Optimization', 'Push Notifications', 'Offline Functionality', 'Performance Monitoring'])">
+                         <div class="service-icon">
+                             <img src="assets/images/services/service-2-icon.svg" alt="Mobile Apps Icon">
+                         </div>
+                         <h3 class="service-title">Mobile Apps</h3>
+                         <p class="service-description">Native and cross-platform mobile applications.</p>
+                         <button class="service-cta-btn">Learn More</button>
+                     </div>
+                     <div class="service-card" onclick="openServiceModal('UI/UX Design', 'Beautiful and intuitive user experiences that engage users and drive conversions through thoughtful design.', ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'User Testing', 'Design Systems', 'Accessibility Compliance'])">
+                         <div class="service-icon">
+                             <img src="assets/images/services/service-3-icon.svg" alt="UI/UX Design Icon">
+                         </div>
+                         <h3 class="service-title">UI/UX Design</h3>
+                         <p class="service-description">Beautiful and intuitive user experiences.</p>
+                         <button class="service-cta-btn">Learn More</button>
+                     </div>
                 </div>
             </div>
         </section>
