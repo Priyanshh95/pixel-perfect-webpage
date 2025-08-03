@@ -214,4 +214,4 @@ This project is created for the JTG Frontend Assignment. All rights reserved.
 1. Add actual images from the Figma design
 2. Update content to match the design
 3. Fine-tune styling for pixel-perfect accuracy
-4. Test thoroughly across all browsers 
+4. Test thoroughly across all browsers
