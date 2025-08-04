@@ -1,8 +1,9 @@
-// Modal functionality (simplified for portfolio website)
+// Modal functionality for portfolio website
 
 class Modal {
     constructor() {
         this.modals = document.querySelectorAll('.modal');
+        this.activeModal = null;
         this.init();
     }
     
@@ -30,8 +31,18 @@ class Modal {
         
         // Close on escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeAllModals();
+            if (e.key === 'Escape' && this.activeModal) {
+                this.closeModal(this.activeModal);
+            }
+        });
+        
+        // Prevent modal content clicks from closing modal
+        this.modals.forEach(modal => {
+            const modalContent = modal.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
             }
         });
     }
@@ -39,13 +50,24 @@ class Modal {
     openModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
+            // Close any existing modal
+            if (this.activeModal) {
+                this.closeModal(this.activeModal);
+            }
+            
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            this.activeModal = modal;
             
             // Focus management
-            const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusableElements.length > 0) {
-                focusableElements[0].focus();
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+            
+            // Animate skill bars if it's the skills modal
+            if (modalId === 'skillsModal') {
+                this.animateSkillBars(modal);
             }
         }
     }
@@ -53,6 +75,7 @@ class Modal {
     closeModal(modal) {
         modal.style.display = 'none';
         document.body.style.overflow = '';
+        this.activeModal = null;
     }
     
     closeAllModals() {
@@ -60,23 +83,36 @@ class Modal {
             this.closeModal(modal);
         });
     }
+    
+    animateSkillBars(modal) {
+        const skillBars = modal.querySelectorAll('.skill-progress');
+        skillBars.forEach((bar, index) => {
+            setTimeout(() => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            }, index * 200);
+        });
+    }
 }
 
 // Initialize modals when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    new Modal();
+    window.modalInstance = new Modal();
 });
 
-// Global functions for opening modals (if needed)
+// Global functions for opening and closing modals
 window.openModal = function(modalId) {
-    const modalInstance = new Modal();
-    modalInstance.openModal(modalId);
+    if (window.modalInstance) {
+        window.modalInstance.openModal(modalId);
+    }
 };
 
 window.closeModal = function(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) {
-        const modalInstance = new Modal();
-        modalInstance.closeModal(modal);
+    if (modal && window.modalInstance) {
+        window.modalInstance.closeModal(modal);
     }
 }; 

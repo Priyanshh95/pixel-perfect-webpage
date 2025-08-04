@@ -23,7 +23,7 @@ class RecommendationsCarousel {
     
     init() {
         this.setupEventListeners();
-        // Removed auto-play - carousel is now static until manually interacted with
+        this.startAutoPlay();
         this.updateDots();
     }
     
@@ -32,7 +32,7 @@ class RecommendationsCarousel {
         this.dots.forEach((dot, index) => {
             dot.addEventListener('click', () => {
                 this.goToSlide(index);
-                // Removed auto-play restart - carousel stays static
+                this.restartAutoPlay();
             });
         });
         
@@ -59,7 +59,7 @@ class RecommendationsCarousel {
             isDragging = true;
             startPos = e.clientX;
             this.track.style.cursor = 'grabbing';
-            // Removed auto-play stop - no auto-play to stop
+            this.stopAutoPlay();
         });
         
         document.addEventListener('mousemove', (e) => {
@@ -90,10 +90,28 @@ class RecommendationsCarousel {
             // Snap to nearest slide
             const slideIndex = Math.round(Math.abs(currentTranslate) / this.slideWidth);
             this.goToSlide(slideIndex);
-            // Removed auto-play restart - carousel stays static
+            this.restartAutoPlay();
         });
         
-        // Removed hover auto-play controls - no auto-play to control
+        // Pause auto-play on hover
+        this.carousel.addEventListener('mouseenter', () => {
+            this.stopAutoPlay();
+        });
+        
+        this.carousel.addEventListener('mouseleave', () => {
+            this.restartAutoPlay();
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                this.prevSlide();
+                this.restartAutoPlay();
+            } else if (e.key === 'ArrowRight') {
+                this.nextSlide();
+                this.restartAutoPlay();
+            }
+        });
     }
     
     handleSwipe(startX, endX) {

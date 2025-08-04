@@ -18,11 +18,11 @@ class FormValidator {
         
         this.init();
     }
-    
+
     init() {
         this.setupFields();
         this.setupEventListeners();
-        this.setupRealTimeValidation();
+            this.setupRealTimeValidation();
     }
     
     setupFields() {
@@ -47,7 +47,7 @@ class FormValidator {
             }
         });
     }
-    
+
     setupEventListeners() {
         this.form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -90,7 +90,7 @@ class FormValidator {
             });
         }
     }
-    
+
     validateForm() {
         this.errors = {};
         
@@ -134,38 +134,38 @@ class FormValidator {
         if (!field) return;
         
         const value = field.value.trim();
-        
+
         // Clear previous error
         this.clearFieldError(fieldName);
-        
+
         // Check required fields
         if (field.hasAttribute('required') && !value) {
             this.showFieldError(fieldName, 'This field is required');
             return false;
         }
-        
+
         // Field-specific validation
-        switch (fieldName) {
+            switch (fieldName) {
             case 'email':
                 if (value && !this.isValidEmail(value)) {
                     this.showFieldError(fieldName, 'Please enter a valid email address');
                     return false;
-                }
-                break;
-                
+                    }
+                    break;
+                    
             case 'fullName':
                 if (value && value.length < 2) {
                     this.showFieldError(fieldName, 'Name must be at least 2 characters long');
                     return false;
-                }
-                break;
-                
-            case 'message':
+                    }
+                    break;
+                    
+                case 'message':
                 if (value && value.length < 10) {
                     this.showFieldError(fieldName, 'Message must be at least 10 characters long');
                     return false;
-                }
-                break;
+                    }
+                    break;
         }
         
         return true;
