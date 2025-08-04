@@ -3,588 +3,309 @@
  * Comprehensive form validation and testing for all website functionality
  */
 
+// Form validation for contact form
+
 class FormValidator {
-    constructor() {
-        this.form = document.querySelector('.contact-form');
-        this.errorMessages = {
-            name: {
-                required: 'Name is required',
-                minLength: 'Name must be at least 2 characters long'
-            },
-            email: {
-                required: 'Email is required',
-                invalid: 'Please enter a valid email address'
-            },
-            message: {
-                required: 'Message is required',
-                minLength: 'Message must be at least 10 characters long'
-            }
-        };
+    constructor(formSelector) {
+        this.form = document.querySelector(formSelector);
+        this.fields = {};
+        this.errors = {};
+        
+        if (!this.form) {
+            console.warn('Form not found:', formSelector);
+            return;
+        }
         
         this.init();
     }
-
+    
     init() {
-        if (this.form) {
-            this.setupValidation();
-            this.setupRealTimeValidation();
-        }
+        this.setupFields();
+        this.setupEventListeners();
+        this.setupRealTimeValidation();
     }
-
-    setupValidation() {
-        this.form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            if (this.validateForm()) {
-                this.submitForm();
-            }
-        });
-    }
-
-    setupRealTimeValidation() {
+    
+    setupFields() {
+        // Get all form fields
         const inputs = this.form.querySelectorAll('input, textarea');
         
         inputs.forEach(input => {
-            input.addEventListener('blur', () => {
-                this.validateField(input);
+            const fieldName = input.name;
+            this.fields[fieldName] = input;
+            
+            // Create error container if it doesn't exist
+            if (!input.nextElementSibling || !input.nextElementSibling.classList.contains('field-error')) {
+                const errorContainer = document.createElement('div');
+                errorContainer.className = 'field-error';
+                errorContainer.style.cssText = `
+                    color: #dc3545;
+                    font-size: 0.875rem;
+                    margin-top: 0.25rem;
+                    display: none;
+                `;
+                input.parentNode.insertBefore(errorContainer, input.nextSibling);
+            }
+        });
+    }
+    
+    setupEventListeners() {
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.validateForm();
+        });
+        
+        // Add blur event listeners for immediate feedback
+        Object.values(this.fields).forEach(field => {
+            field.addEventListener('blur', () => {
+                this.validateField(field.name);
             });
             
-            input.addEventListener('input', () => {
-                this.clearFieldError(input);
+            field.addEventListener('input', () => {
+                this.clearFieldError(field.name);
             });
         });
     }
-
+    
+    setupRealTimeValidation() {
+        // Real-time validation for specific fields
+        const emailField = this.fields['email'];
+        if (emailField) {
+            emailField.addEventListener('input', () => {
+                if (emailField.value && !this.isValidEmail(emailField.value)) {
+                    this.showFieldError('email', 'Please enter a valid email address');
+                } else {
+                    this.clearFieldError('email');
+                }
+            });
+        }
+        
+        const nameField = this.fields['fullName'];
+        if (nameField) {
+            nameField.addEventListener('input', () => {
+                if (nameField.value && nameField.value.length < 2) {
+                    this.showFieldError('fullName', 'Name must be at least 2 characters long');
+                } else {
+                    this.clearFieldError('fullName');
+                }
+            });
+        }
+    }
+    
     validateForm() {
-        const inputs = this.form.querySelectorAll('input, textarea');
-        let isValid = true;
-
-        inputs.forEach(input => {
-            if (!this.validateField(input)) {
-                isValid = false;
+        this.errors = {};
+        
+        // Validate required fields
+        Object.entries(this.fields).forEach(([fieldName, field]) => {
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                this.errors[fieldName] = 'This field is required';
             }
         });
-
-        return isValid;
-    }
-
-    validateField(field) {
-        const value = field.value.trim();
-        const fieldName = field.name;
-        let isValid = true;
-
-        // Clear previous errors
-        this.clearFieldError(field);
-
-        // Required validation
-        if (field.hasAttribute('required') && !value) {
-            this.showFieldError(field, this.errorMessages[fieldName].required);
-            isValid = false;
+        
+        // Validate email
+        const email = this.fields['email']?.value;
+        if (email && !this.isValidEmail(email)) {
+            this.errors['email'] = 'Please enter a valid email address';
         }
-
-        // Specific field validations
-        if (value) {
-            switch (fieldName) {
-                case 'name':
-                    if (value.length < 2) {
-                        this.showFieldError(field, this.errorMessages.name.minLength);
-                        isValid = false;
-                    }
-                    break;
-                    
-                case 'email':
-                    if (!this.isValidEmail(value)) {
-                        this.showFieldError(field, this.errorMessages.email.invalid);
-                        isValid = false;
-                    }
-                    break;
-                    
-                case 'message':
-                    if (value.length < 10) {
-                        this.showFieldError(field, this.errorMessages.message.minLength);
-                        isValid = false;
-                    }
-                    break;
-            }
+        
+        // Validate name length
+        const name = this.fields['fullName']?.value;
+        if (name && name.length < 2) {
+            this.errors['fullName'] = 'Name must be at least 2 characters long';
         }
-
-        // Update field styling
-        if (isValid) {
-            field.classList.remove('error');
-            field.classList.add('valid');
+        
+        // Validate message length
+        const message = this.fields['message']?.value;
+        if (message && message.length < 10) {
+            this.errors['message'] = 'Message must be at least 10 characters long';
+        }
+        
+        // Display errors or submit form
+        if (Object.keys(this.errors).length > 0) {
+            this.displayErrors();
+            return false;
         } else {
-            field.classList.remove('valid');
-            field.classList.add('error');
-        }
-
-        return isValid;
-    }
-
-    showFieldError(field, message) {
-        const errorElement = document.getElementById(`${field.name}-error`);
-        if (errorElement) {
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
+            this.submitForm();
+            return true;
         }
     }
-
-    clearFieldError(field) {
-        const errorElement = document.getElementById(`${field.name}-error`);
-        if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.style.display = 'none';
+    
+    validateField(fieldName) {
+        const field = this.fields[fieldName];
+        if (!field) return;
+        
+        const value = field.value.trim();
+        
+        // Clear previous error
+        this.clearFieldError(fieldName);
+        
+        // Check required fields
+        if (field.hasAttribute('required') && !value) {
+            this.showFieldError(fieldName, 'This field is required');
+            return false;
         }
-        field.classList.remove('error', 'valid');
+        
+        // Field-specific validation
+        switch (fieldName) {
+            case 'email':
+                if (value && !this.isValidEmail(value)) {
+                    this.showFieldError(fieldName, 'Please enter a valid email address');
+                    return false;
+                }
+                break;
+                
+            case 'fullName':
+                if (value && value.length < 2) {
+                    this.showFieldError(fieldName, 'Name must be at least 2 characters long');
+                    return false;
+                }
+                break;
+                
+            case 'message':
+                if (value && value.length < 10) {
+                    this.showFieldError(fieldName, 'Message must be at least 10 characters long');
+                    return false;
+                }
+                break;
+        }
+        
+        return true;
     }
-
+    
+    showFieldError(fieldName, message) {
+        const field = this.fields[fieldName];
+        if (!field) return;
+        
+        const errorContainer = field.nextElementSibling;
+        if (errorContainer && errorContainer.classList.contains('field-error')) {
+            errorContainer.textContent = message;
+            errorContainer.style.display = 'block';
+            
+            // Add error styling to field
+            field.style.borderColor = '#dc3545';
+            field.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+        }
+    }
+    
+    clearFieldError(fieldName) {
+        const field = this.fields[fieldName];
+        if (!field) return;
+        
+        const errorContainer = field.nextElementSibling;
+        if (errorContainer && errorContainer.classList.contains('field-error')) {
+            errorContainer.style.display = 'none';
+            
+            // Remove error styling from field
+            field.style.borderColor = '';
+            field.style.boxShadow = '';
+        }
+    }
+    
+    displayErrors() {
+        Object.entries(this.errors).forEach(([fieldName, message]) => {
+            this.showFieldError(fieldName, message);
+        });
+        
+        // Show general error message
+        this.showNotification('Please correct the errors above.', 'error');
+        
+        // Focus on first error field
+        const firstErrorField = Object.keys(this.errors)[0];
+        if (firstErrorField && this.fields[firstErrorField]) {
+            this.fields[firstErrorField].focus();
+        }
+    }
+    
+    submitForm() {
+        // Show success message
+        this.showNotification('Form submitted successfully!', 'success');
+        
+        // Reset form
+        this.form.reset();
+        
+        // Clear all field errors
+        Object.keys(this.fields).forEach(fieldName => {
+            this.clearFieldError(fieldName);
+        });
+        
+        // Simulate form submission (replace with actual submission logic)
+        console.log('Form data:', this.getFormData());
+    }
+    
+    getFormData() {
+        const formData = new FormData(this.form);
+        const data = {};
+        
+        for (let [key, value] of formData.entries()) {
+            data[key] = value;
+        }
+        
+        return data;
+    }
+    
     isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
-
-    submitForm() {
-        const submitBtn = this.form.querySelector('.submit-btn');
-        const originalText = submitBtn.textContent;
+    
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
         
-        // Disable submit button
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-        
-        // Simulate form submission
-        setTimeout(() => {
-            this.showSuccessMessage();
-            this.form.reset();
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-            
-            // Clear all field states
-            const inputs = this.form.querySelectorAll('input, textarea');
-            inputs.forEach(input => {
-                input.classList.remove('error', 'valid');
-                this.clearFieldError(input);
-            });
-        }, 2000);
-    }
-
-    showSuccessMessage() {
-        const successContent = `
-            <div class="success-message">
-                <div class="success-icon">✓</div>
-                <h3>Message Sent Successfully!</h3>
-                <p>Thank you for contacting us. We'll get back to you soon.</p>
-                <button class="btn-primary" onclick="modal.close()">Close</button>
-            </div>
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 300px;
         `;
         
-        if (window.modal) {
-            window.modal.open('Success', successContent, 'success');
-        } else {
-            alert('Message sent successfully!');
+        // Set background color based on type
+        switch (type) {
+            case 'success':
+                notification.style.backgroundColor = '#28a745';
+                break;
+            case 'error':
+                notification.style.backgroundColor = '#dc3545';
+                break;
+            default:
+                notification.style.backgroundColor = '#17a2b8';
         }
-    }
-}
-
-class WebsiteValidator {
-    constructor() {
-        this.testResults = {
-            html: {},
-            css: {},
-            javascript: {},
-            accessibility: {},
-            performance: {},
-            crossBrowser: {}
-        };
-    }
-
-    // HTML Validation
-    validateHTML() {
-        console.log('🔍 Validating HTML...');
         
-        // Check semantic HTML usage
-        const semanticElements = ['header', 'nav', 'main', 'section', 'article', 'footer', 'aside'];
-        const semanticCount = {};
+        // Add to page
+        document.body.appendChild(notification);
         
-        semanticElements.forEach(element => {
-            const count = document.querySelectorAll(element).length;
-            semanticCount[element] = count;
-        });
-        
-        // Check for required elements
-        const requiredElements = {
-            'doctype': document.doctype !== null,
-            'html lang': document.documentElement.lang !== '',
-            'viewport meta': document.querySelector('meta[name="viewport"]') !== null,
-            'title': document.title !== '',
-            'main': document.querySelector('main') !== null,
-            'header': document.querySelector('header') !== null,
-            'footer': document.querySelector('footer') !== null
-        };
-        
-        // Check image alt attributes
-        const images = document.querySelectorAll('img');
-        const imagesWithAlt = Array.from(images).filter(img => img.alt !== '');
-        const altTextCoverage = (imagesWithAlt.length / images.length) * 100;
-        
-        this.testResults.html = {
-            semanticElements: semanticCount,
-            requiredElements,
-            imagesWithAlt: imagesWithAlt.length,
-            totalImages: images.length,
-            altTextCoverage: `${altTextCoverage.toFixed(1)}%`,
-            status: this.getOverallStatus(requiredElements)
-        };
-        
-        console.log('✅ HTML Validation Complete:', this.testResults.html);
-        return this.testResults.html;
-    }
-
-    // CSS Validation
-    validateCSS() {
-        console.log('🎨 Validating CSS...');
-        
-        // Check CSS variables usage
-        const computedStyle = getComputedStyle(document.documentElement);
-        const cssVariables = [
-            '--primary-color',
-            '--secondary-color',
-            '--font-family',
-            '--font-size-base',
-            '--spacing-md'
-        ];
-        
-        const cssVarStatus = {};
-        cssVariables.forEach(variable => {
-            cssVarStatus[variable] = computedStyle.getPropertyValue(variable) !== '';
-        });
-        
-        // Check responsive design
-        const mediaQueries = [
-            { name: 'Mobile', width: 375 },
-            { name: 'Tablet', width: 768 },
-            { name: 'Desktop', width: 1200 }
-        ];
-        
-        const responsiveStatus = {};
-        mediaQueries.forEach(breakpoint => {
-            // Simulate viewport width
-            const originalWidth = window.innerWidth;
-            Object.defineProperty(window, 'innerWidth', {
-                writable: true,
-                configurable: true,
-                value: breakpoint.width
-            });
-            
-            // Trigger resize event
-            window.dispatchEvent(new Event('resize'));
-            
-            // Check if layout adapts (basic check)
-            const container = document.querySelector('.container');
-            responsiveStatus[breakpoint.name] = container !== null;
-            
-            // Restore original width
-            Object.defineProperty(window, 'innerWidth', {
-                writable: true,
-                configurable: true,
-                value: originalWidth
-            });
-        });
-        
-        this.testResults.css = {
-            cssVariables: cssVarStatus,
-            responsiveDesign: responsiveStatus,
-            status: this.getOverallStatus(cssVarStatus)
-        };
-        
-        console.log('✅ CSS Validation Complete:', this.testResults.css);
-        return this.testResults.css;
-    }
-
-    // JavaScript Functionality Testing
-    validateJavaScript() {
-        console.log('⚡ Validating JavaScript...');
-        
-        const jsTests = {
-            carousel: this.testCarousel(),
-            modal: this.testModal(),
-            form: this.testForm(),
-            navigation: this.testNavigation(),
-            smoothScroll: this.testSmoothScroll()
-        };
-        
-        this.testResults.javascript = {
-            ...jsTests,
-            status: this.getOverallStatus(jsTests)
-        };
-        
-        console.log('✅ JavaScript Validation Complete:', this.testResults.javascript);
-        return this.testResults.javascript;
-    }
-
-    // Test Carousel Functionality
-    testCarousel() {
-        const carousel = document.querySelector('.carousel-wrapper');
-        if (!carousel) return { status: false, error: 'Carousel not found' };
-        
-        const slides = carousel.querySelectorAll('.carousel-slide');
-        const dots = document.querySelectorAll('.dot');
-        const prevBtn = document.querySelector('.carousel-prev');
-        const nextBtn = document.querySelector('.carousel-next');
-        
-        return {
-            slidesCount: slides.length,
-            dotsCount: dots.length,
-            hasNavigationButtons: prevBtn !== null && nextBtn !== null,
-            hasAutoSlide: typeof window.carousel !== 'undefined',
-            status: slides.length > 0 && dots.length > 0
-        };
-    }
-
-    // Test Modal Functionality
-    testModal() {
-        const modal = document.getElementById('modal');
-        if (!modal) return { status: false, error: 'Modal not found' };
-        
-        const modalContent = modal.querySelector('.modal-content');
-        const closeBtn = modal.querySelector('.modal-close');
-        
-        return {
-            hasModal: modal !== null,
-            hasContent: modalContent !== null,
-            hasCloseButton: closeBtn !== null,
-            hasOpenFunction: typeof window.openModal === 'function',
-            status: modal !== null && modalContent !== null
-        };
-    }
-
-    // Test Form Functionality
-    testForm() {
-        const form = document.querySelector('.contact-form');
-        if (!form) return { status: false, error: 'Form not found' };
-        
-        const inputs = form.querySelectorAll('input, textarea');
-        const submitBtn = form.querySelector('.submit-btn');
-        
-        return {
-            hasForm: form !== null,
-            inputsCount: inputs.length,
-            hasSubmitButton: submitBtn !== null,
-            hasValidation: form.hasAttribute('novalidate') === false,
-            status: form !== null && inputs.length > 0
-        };
-    }
-
-    // Test Navigation
-    testNavigation() {
-        const nav = document.querySelector('.nav-menu');
-        if (!nav) return { status: false, error: 'Navigation not found' };
-        
-        const links = nav.querySelectorAll('a');
-        const validLinks = Array.from(links).filter(link => link.href !== '');
-        
-        return {
-            hasNavigation: nav !== null,
-            linksCount: links.length,
-            validLinksCount: validLinks.length,
-            status: nav !== null && links.length > 0
-        };
-    }
-
-    // Test Smooth Scroll
-    testSmoothScroll() {
-        const links = document.querySelectorAll('a[href^="#"]');
-        return {
-            hasAnchorLinks: links.length > 0,
-            status: links.length > 0
-        };
-    }
-
-    // Accessibility Testing
-    validateAccessibility() {
-        console.log('♿ Validating Accessibility...');
-        
-        // Check ARIA labels
-        const elementsWithAria = document.querySelectorAll('[aria-label], [aria-labelledby], [role]');
-        
-        // Check focus management
-        const focusableElements = document.querySelectorAll('button, a, input, textarea, select');
-        const keyboardAccessible = Array.from(focusableElements).filter(el => {
-            const tabIndex = el.getAttribute('tabindex');
-            return tabIndex === null || tabIndex !== '-1';
-        });
-        
-        // Check color contrast (basic check)
-        const textElements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, span, div');
-        const hasGoodContrast = textElements.length > 0; // Simplified check
-        
-        this.testResults.accessibility = {
-            ariaElements: elementsWithAria.length,
-            focusableElements: focusableElements.length,
-            keyboardAccessible: keyboardAccessible.length,
-            hasGoodContrast: hasGoodContrast,
-            status: elementsWithAria.length > 0 && keyboardAccessible.length > 0
-        };
-        
-        console.log('✅ Accessibility Validation Complete:', this.testResults.accessibility);
-        return this.testResults.accessibility;
-    }
-
-    // Performance Testing
-    validatePerformance() {
-        console.log('⚡ Validating Performance...');
-        
-        // Check image optimization
-        const images = document.querySelectorAll('img');
-        const optimizedImages = Array.from(images).filter(img => {
-            const src = img.src;
-            return src.includes('.svg') || src.includes('.webp') || src.includes('.jpg') || src.includes('.png');
-        });
-        
-        // Check CSS and JS file sizes (basic check)
-        const cssFiles = document.querySelectorAll('link[rel="stylesheet"]');
-        const jsFiles = document.querySelectorAll('script[src]');
-        
-        // Check for render-blocking resources
-        const renderBlocking = document.querySelectorAll('link[rel="stylesheet"]:not([media="print"])');
-        
-        this.testResults.performance = {
-            totalImages: images.length,
-            optimizedImages: optimizedImages.length,
-            cssFiles: cssFiles.length,
-            jsFiles: jsFiles.length,
-            renderBlockingResources: renderBlocking.length,
-            status: optimizedImages.length > 0
-        };
-        
-        console.log('✅ Performance Validation Complete:', this.testResults.performance);
-        return this.testResults.performance;
-    }
-
-    // Cross-Browser Compatibility Check
-    validateCrossBrowser() {
-        console.log('🌐 Validating Cross-Browser Compatibility...');
-        
-        const browserInfo = {
-            userAgent: navigator.userAgent,
-            vendor: navigator.vendor,
-            platform: navigator.platform,
-            language: navigator.language
-        };
-        
-        // Check for modern CSS features
-        const cssFeatures = {
-            cssGrid: CSS.supports('display', 'grid'),
-            cssFlexbox: CSS.supports('display', 'flex'),
-            cssVariables: CSS.supports('--custom-property', 'value'),
-            cssTransforms: CSS.supports('transform', 'translateX(0)')
-        };
-        
-        // Check for modern JavaScript features
-        const jsFeatures = {
-            es6Classes: typeof class Test {} === 'function',
-            arrowFunctions: typeof (() => {}) === 'function',
-            templateLiterals: typeof `test` === 'string',
-            destructuring: typeof ({a, b} = {a: 1, b: 2}) === 'undefined'
-        };
-        
-        this.testResults.crossBrowser = {
-            browserInfo,
-            cssFeatures,
-            jsFeatures,
-            status: Object.values(cssFeatures).every(Boolean) && Object.values(jsFeatures).every(Boolean)
-        };
-        
-        console.log('✅ Cross-Browser Validation Complete:', this.testResults.crossBrowser);
-        return this.testResults.crossBrowser;
-    }
-
-    // Helper method to get overall status
-    getOverallStatus(results) {
-        const values = Object.values(results).filter(value => typeof value === 'boolean');
-        return values.length > 0 ? values.every(Boolean) : true;
-    }
-
-    // Run all validations
-    runAllValidations() {
-        console.log('🚀 Starting Comprehensive Website Validation...');
-        console.log('=' .repeat(50));
-        
-        this.validateHTML();
-        this.validateCSS();
-        this.validateJavaScript();
-        this.validateAccessibility();
-        this.validatePerformance();
-        this.validateCrossBrowser();
-        
-        console.log('=' .repeat(50));
-        console.log('✅ All Validations Complete!');
-        
-        // Generate summary
-        this.generateSummary();
-        
-        return this.testResults;
-    }
-
-    // Generate validation summary
-    generateSummary() {
-        const summary = {
-            totalTests: 0,
-            passedTests: 0,
-            failedTests: 0,
-            categories: {}
-        };
-        
-        Object.entries(this.testResults).forEach(([category, results]) => {
-            if (results.status !== undefined) {
-                summary.totalTests++;
-                if (results.status) {
-                    summary.passedTests++;
-                } else {
-                    summary.failedTests++;
-                }
-            }
-            summary.categories[category] = results.status;
-        });
-        
-        console.log('📊 VALIDATION SUMMARY:');
-        console.log(`Total Tests: ${summary.totalTests}`);
-        console.log(`Passed: ${summary.passedTests}`);
-        console.log(`Failed: ${summary.failedTests}`);
-        console.log(`Success Rate: ${((summary.passedTests / summary.totalTests) * 100).toFixed(1)}%`);
-        
-        Object.entries(summary.categories).forEach(([category, status]) => {
-            console.log(`${category}: ${status ? '✅ PASS' : '❌ FAIL'}`);
-        });
-        
-        return summary;
-    }
-
-    // Export results for external use
-    exportResults() {
-        return {
-            timestamp: new Date().toISOString(),
-            results: this.testResults,
-            summary: this.generateSummary()
-        };
-    }
-}
-
-// Initialize validators when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize form validator
-    window.formValidator = new FormValidator();
-    
-    // Initialize website validator
-    window.websiteValidator = new WebsiteValidator();
-    
-    // Auto-run validation in development mode
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.log('🔧 Development mode detected. Running validation...');
+        // Animate in
         setTimeout(() => {
-            window.websiteValidator.runAllValidations();
-        }, 1000);
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 5000);
     }
+}
+
+// Initialize form validation when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    new FormValidator('.contact-form');
 });
 
-// Make validators globally available
-window.FormValidator = FormValidator;
-window.WebsiteValidator = WebsiteValidator; 
+// Export for potential use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = FormValidator;
+} 

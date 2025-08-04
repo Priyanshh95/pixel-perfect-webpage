@@ -1,81 +1,114 @@
-// Main JavaScript - General functionality
+// Main JavaScript for Portfolio Website
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components
+    initNavigation();
     initSmoothScrolling();
-    initFormHandling();
-    initMobileMenu();
-    initScrollEffects();
+    initFormValidation();
+    initCarousel();
+    initAnimations();
 });
 
-// Smooth scrolling for navigation links
-function initSmoothScrolling() {
-    const navLinks = document.querySelectorAll('a[href^="#"]');
+// Navigation functionality
+function initNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]');
     
+    // Update active navigation link based on scroll position
+    function updateActiveNavLink() {
+        const scrollPos = window.scrollY + 100;
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            const sectionId = section.getAttribute('id');
+            
+            if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${sectionId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+    
+    // Add click event listeners to navigation links
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            
             const targetId = this.getAttribute('href');
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                const headerHeight = document.querySelector('.header').offsetHeight;
-                const targetPosition = targetSection.offsetTop - headerHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', updateActiveNavLink);
+    
+    // Initial call to set active link
+    updateActiveNavLink();
+}
+
+// Smooth scrolling for all internal links
+function initSmoothScrolling() {
+    const internalLinks = document.querySelectorAll('a[href^="#"]');
+    
+    internalLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
                 });
             }
         });
     });
 }
 
-// Form handling
-function initFormHandling() {
+// Form validation
+function initFormValidation() {
     const contactForm = document.querySelector('.contact-form');
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Get form data
             const formData = new FormData(this);
-            const name = formData.get('name');
+            const name = formData.get('fullName');
             const email = formData.get('email');
             const message = formData.get('message');
             
             // Basic validation
             if (!name || !email || !message) {
-                showNotification('Please fill in all fields', 'error');
+                showNotification('Please fill in all required fields.', 'error');
                 return;
             }
             
             if (!isValidEmail(email)) {
-                showNotification('Please enter a valid email address', 'error');
+                showNotification('Please enter a valid email address.', 'error');
                 return;
             }
             
             // Simulate form submission
-            const submitBtn = this.querySelector('.submit-btn');
-            const originalText = submitBtn.textContent;
-            
-            submitBtn.textContent = 'Sending...';
-            submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                showNotification('Message sent successfully!', 'success');
-                this.reset();
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 2000);
+            showNotification('Message sent successfully!', 'success');
+            this.reset();
         });
     }
 }
 
-// Email validation
+// Email validation helper
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -84,10 +117,8 @@ function isValidEmail(email) {
 // Notification system
 function showNotification(message, type = 'info') {
     // Remove existing notifications
-    const existingNotification = document.querySelector('.notification');
-    if (existingNotification) {
-        existingNotification.remove();
-    }
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
     
     // Create notification element
     const notification = document.createElement('div');
@@ -103,8 +134,9 @@ function showNotification(message, type = 'info') {
         border-radius: 8px;
         color: white;
         font-weight: 500;
-        z-index: 3000;
-        animation: slideInRight 0.3s ease;
+        z-index: 10000;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
         max-width: 300px;
     `;
     
@@ -116,10 +148,6 @@ function showNotification(message, type = 'info') {
         case 'error':
             notification.style.backgroundColor = '#dc3545';
             break;
-        case 'warning':
-            notification.style.backgroundColor = '#ffc107';
-            notification.style.color = '#212529';
-            break;
         default:
             notification.style.backgroundColor = '#17a2b8';
     }
@@ -127,60 +155,63 @@ function showNotification(message, type = 'info') {
     // Add to page
     document.body.appendChild(notification);
     
-    // Auto remove after 5 seconds
+    // Animate in
     setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
             if (notification.parentNode) {
-                notification.remove();
+                notification.parentNode.removeChild(notification);
             }
         }, 300);
     }, 5000);
-    
-    // Add click to dismiss
-    notification.addEventListener('click', () => {
-        notification.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 300);
-    });
 }
 
-// Mobile menu functionality
-function initMobileMenu() {
-    // This will be implemented when we add mobile menu HTML
-    // For now, we'll just handle responsive navigation
-    const nav = document.querySelector('.nav');
+// Carousel functionality
+function initCarousel() {
+    const carouselTrack = document.querySelector('.carousel-track');
+    const dots = document.querySelectorAll('.carousel-dots .dot');
+    let currentSlide = 0;
     
-    if (nav) {
-        // Add mobile menu toggle functionality here
-        // This is a placeholder for future mobile menu implementation
-    }
-}
-
-// Scroll effects
-function initScrollEffects() {
-    const header = document.querySelector('.header');
+    if (!carouselTrack || dots.length === 0) return;
     
-    if (header) {
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
+    function goToSlide(index) {
+        const slideWidth = 350 + 24; // card width + gap
+        carouselTrack.style.transform = `translateX(-${index * slideWidth}px)`;
+        
+        // Update dots
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
         });
+        
+        currentSlide = index;
     }
     
-    // Intersection Observer for animations
+    // Add click events to dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => goToSlide(index));
+    });
+    
+    // Auto-play carousel
+    setInterval(() => {
+        const nextSlide = (currentSlide + 1) % dots.length;
+        goToSlide(nextSlide);
+    }, 5000);
+}
+
+// Animations
+function initAnimations() {
+    // Intersection Observer for scroll animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
     
-    const observer = new IntersectionObserver(function(entries) {
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('animate-in');
@@ -189,11 +220,37 @@ function initScrollEffects() {
     }, observerOptions);
     
     // Observe elements for animation
-    const animateElements = document.querySelectorAll('.service-card, .section-title, .about-content');
+    const animateElements = document.querySelectorAll('.project-card, .testimonial-card, .contact-card');
     animateElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+    
+    // Add animation class
+    document.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll('.hero-shapes .shape');
+        
+        parallaxElements.forEach((element, index) => {
+            const speed = 0.5 + (index * 0.1);
+            element.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+    });
 }
+
+// Add animation class when element comes into view
+document.addEventListener('DOMContentLoaded', function() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .animate-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    `;
+    document.head.appendChild(style);
+});
 
 // Utility functions
 function debounce(func, wait) {
@@ -208,56 +265,7 @@ function debounce(func, wait) {
     };
 }
 
-// Add CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-    
-    .header.scrolled {
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-    
-    .animate-in {
-        animation: fadeInUp 0.6s ease forwards;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .service-card,
-    .section-title,
-    .about-content {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-`;
-document.head.appendChild(style); 
+// Handle window resize
+window.addEventListener('resize', debounce(() => {
+    // Recalculate any layout-dependent values here
+}, 250)); 

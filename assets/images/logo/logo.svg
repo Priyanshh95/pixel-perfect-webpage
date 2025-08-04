@@ -1,4 +1,16 @@
-<svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
-  <rect width="120" height="40" fill="#007bff" rx="4"/>
-  <text x="60" y="25" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">JTG</text>
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Left lens -->
+  <circle cx="25" cy="40" r="15" stroke="#2D2D2D" stroke-width="3" fill="none"/>
+  
+  <!-- Right lens -->
+  <circle cx="55" cy="40" r="15" stroke="#2D2D2D" stroke-width="3" fill="none"/>
+  
+  <!-- Bridge -->
+  <line x1="40" y1="40" x2="40" y2="40" stroke="#2D2D2D" stroke-width="3"/>
+  
+  <!-- Left temple -->
+  <line x1="10" y1="40" x2="10" y2="40" stroke="#2D2D2D" stroke-width="3"/>
+  
+  <!-- Right temple -->
+  <line x1="70" y1="40" x2="70" y2="40" stroke="#2D2D2D" stroke-width="3"/>
 </svg> 

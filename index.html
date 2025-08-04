@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JTG - Frontend Assignment</title>
+    <title>Rayon Adırdard - Frontend Developer</title>
     
-    <!-- Google Fonts - Open Sans -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/reset.css">
@@ -22,13 +22,15 @@
         <nav class="nav">
             <div class="nav-container">
                 <div class="nav-logo">
-                    <img src="assets/images/logo/logo.svg" alt="JTG Logo" class="logo">
+                    <img src="assets/images/logo/logo.svg" alt="Rayon Adırdard Logo" class="logo">
                 </div>
                 <ul class="nav-menu">
-                    <li><a href="#home" aria-label="Go to home section">Home</a></li>
-                    <li><a href="#about" aria-label="Go to about section">About</a></li>
-                    <li><a href="#services" aria-label="Go to services section">Services</a></li>
-                    <li><a href="#contact" aria-label="Go to contact section">Contact</a></li>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#education" class="nav-link">Education</a></li>
+                    <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#recommendations" class="nav-link">Recommendations</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
             </div>
         </nav>
@@ -40,96 +42,234 @@
         <section class="hero" id="home">
             <div class="hero-container">
                 <div class="hero-content">
-                    <h1 class="hero-title">Welcome to JTG</h1>
-                    <p class="hero-description">Your trusted partner in digital solutions</p>
-                    <button class="hero-cta" onclick="openContactModal()" aria-label="Get started with our services">Get Started</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section class="about" id="about">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-text">
-                        <h2>About Us</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    </div>
-                    <div class="about-image">
-                        <img src="assets/images/about/about-image.jpg" alt="About JTG - Our team and workspace" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section class="services" id="services">
-            <div class="container">
-                <h2 class="section-title">Our Services</h2>
-                <div class="services-grid">
-                    <div class="service-card" onclick="openServiceModal('Web Development', 'Custom web solutions tailored to your business needs. We create responsive, modern websites that drive results.', ['Responsive Design', 'SEO Optimization', 'Performance Optimization', 'Content Management', 'E-commerce Solutions', 'API Integration'])" role="button" tabindex="0" aria-label="Learn more about Web Development services">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-1-icon.svg" alt="Web Development Icon">
+                    <div class="hero-text">
+                        <h1 class="hero-title">I'm Rayon Adırdard</h1>
+                        <h2 class="hero-subtitle">
+                            <span class="highlight">Front-end</span> Developer
+                        </h2>
+                        <p class="hero-description">
+                            Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Et, Volutpat Feugiat Placerat Lobortis. Natoque Rutrum Semper Sed Suspendisse Nunc Lectus.
+                        </p>
+                                                   <div class="hero-actions">
+                               <button class="hire-me-btn">HIRE ME</button>
+                           </div>
+                        <div class="hero-shapes">
+                            <div class="shape shape-circle-yellow"></div>
+                            <div class="shape shape-square-blue"></div>
+                            <div class="shape shape-circle-green"></div>
                         </div>
-                        <h3 class="service-title">Web Development</h3>
-                        <p class="service-description">Custom web solutions tailored to your needs.</p>
-                        <button class="service-cta-btn">Learn More</button>
                     </div>
-                    <div class="service-card" onclick="openServiceModal('Mobile Apps', 'Native and cross-platform mobile applications that deliver exceptional user experiences across all devices.', ['Native iOS & Android', 'Cross-platform Development', 'App Store Optimization', 'Push Notifications', 'Offline Functionality', 'Performance Monitoring'])" role="button" tabindex="0" aria-label="Learn more about Mobile Apps services">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-2-icon.svg" alt="Mobile Apps Icon">
+                    <div class="hero-illustration">
+                        <div class="illustration-container">
+                            <div class="person-illustration">
+                                <div class="person"></div>
+                                <div class="monitor">
+                                    <div class="monitor-screen">
+                                        <div class="code-lines">
+                                            <span class="code-line">&lt;</span>
+                                            <span class="code-line">/</span>
+                                            <span class="code-line">-</span>
+                                            <span class="code-line">&gt;</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="illustration-shapes">
+                                <div class="shape shape-square-purple"></div>
+                                <div class="shape shape-icon"></div>
+                                <div class="shape shape-triangle-purple"></div>
+                                <div class="shape shape-gear"></div>
+                                <div class="shape shape-triangle-red"></div>
+                            </div>
                         </div>
-                        <h3 class="service-title">Mobile Apps</h3>
-                        <p class="service-description">Native and cross-platform mobile applications.</p>
-                        <button class="service-cta-btn">Learn More</button>
-                    </div>
-                    <div class="service-card" onclick="openServiceModal('UI/UX Design', 'Beautiful and intuitive user experiences that engage users and drive conversions through thoughtful design.', ['User Research', 'Wireframing & Prototyping', 'Visual Design', 'User Testing', 'Design Systems', 'Accessibility Compliance'])" role="button" tabindex="0" aria-label="Learn more about UI/UX Design services">
-                        <div class="service-icon">
-                            <img src="assets/images/services/service-3-icon.svg" alt="UI/UX Design Icon">
-                        </div>
-                        <h3 class="service-title">UI/UX Design</h3>
-                        <p class="service-description">Beautiful and intuitive user experiences.</p>
-                        <button class="service-cta-btn">Learn More</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Carousel Section -->
-        <section class="carousel-section">
+        <!-- Projects Section -->
+        <section class="projects" id="projects">
             <div class="container">
-                <h2 class="section-title">Featured Projects</h2>
-                <div class="carousel-container">
-                    <div class="carousel-wrapper" role="region" aria-label="Featured projects carousel">
-                        <div class="carousel-slide" aria-hidden="false">
-                            <img src="assets/images/carousel/slide-1.jpg" alt="Project One - Web Development Project">
-                            <div class="slide-content">
-                                <h3>Project One</h3>
-                                <p>Web Development Project</p>
-                            </div>
+                <div class="section-header">
+                    <div class="section-line"></div>
+                    <h2 class="section-title">Projects</h2>
+                    <p class="section-description">
+                        Amet Minim Mollit Non Deserunt Ullamco Est Sit Aliqua Dolor Do Amet Sint. Velit Officia Consequat Duis Enim Velit Mollit. Lorem Ipsum
+                    </p>
+                </div>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=200&fit=crop&crop=center" alt="Project 1 - Team collaboration">
                         </div>
-                        <div class="carousel-slide" aria-hidden="true">
-                            <img src="assets/images/carousel/slide-2.jpg" alt="Project Two - Mobile App Development">
-                            <div class="slide-content">
-                                <h3>Project Two</h3>
-                                <p>Mobile App Development</p>
-                            </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
+                            <span class="tag">MongoDB</span>
                         </div>
-                        <div class="carousel-slide" aria-hidden="true">
-                            <img src="assets/images/carousel/slide-3.jpg" alt="Project Three - UI/UX Design Project">
-                            <div class="slide-content">
-                                <h3>Project Three</h3>
-                                <p>UI/UX Design Project</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=200&fit=crop&crop=center" alt="Project 2 - Code development">
+                        </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop&crop=center" alt="Project 3 - Software development">
+                        </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=200&fit=crop&crop=center" alt="Project 4 - Web development">
+                        </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=200&fit=crop&crop=center" alt="Project 5 - Team development">
+                        </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=200&fit=crop&crop=center" alt="Project 6 - Coding workspace">
+                        </div>
+                        <h3 class="project-title">How To Make Flyer Design</h3>
+                        <p class="project-description">Lorem Ipsum Dolor Sit Amet, Consec Adipiscing Elit Awd And Lorem Ipsum...</p>
+                        <div class="project-tags">
+                            <span class="tag">Typescript</span>
+                            <span class="tag">ReactJs</span>
+                            <span class="tag">NextJs</span>
+                            <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
+                            <span class="tag">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommendations Section -->
+        <section class="recommendations" id="recommendations">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Recommendations</h2>
+                    <p class="section-description">
+                        Amet Minim Mollit Non Deserunt Ullamco Est Sit Aliqua Dolor Do Amet Sint. Velit Officia Consequat Duis Enim Velit Mollit. Lorem Ipsum
+                    </p>
+                </div>
+                <div class="recommendations-carousel">
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            <div class="testimonial-card">
+                                <div class="stars">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                                <h3 class="testimonial-title">Great Quality!</h3>
+                                <p class="testimonial-text">
+                                    Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Vitae Nulla Diam In Ac Dictum A Urna Viverra Morbi. Morbi Donec Amet....
+                                </p>
+                                <div class="testimonial-author">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" alt="James Gouse" class="author-image">
+                                    <div class="author-info">
+                                        <h4 class="author-name">James Gouse</h4>
+                                        <p class="author-title">Graphic Designer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="testimonial-card">
+                                <div class="stars">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                                <h3 class="testimonial-title">Amazing Work!</h3>
+                                <p class="testimonial-text">
+                                    Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Vitae Nulla Diam In Ac Dictum A Urna Viverra Morbi. Morbi Donec Amet....
+                                </p>
+                                <div class="testimonial-author">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face" alt="Tiana Philips" class="author-image">
+                                    <div class="author-info">
+                                        <h4 class="author-name">Tiana Philips</h4>
+                                        <p class="author-title">Photographer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="testimonial-card">
+                                <div class="stars">
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                    <span class="star">★</span>
+                                </div>
+                                <h3 class="testimonial-title">Great Quality!</h3>
+                                <p class="testimonial-text">
+                                    Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Vitae Nulla Diam In Ac Dictum A Urna Viverra Morbi. Morbi Donec Amet....
+                                </p>
+                                <div class="testimonial-author">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=50&h=50&fit=crop&crop=face" alt="Talan Westervelt" class="author-image">
+                                    <div class="author-info">
+                                        <h4 class="author-name">Talan Westervelt</h4>
+                                        <p class="author-title">Business Man</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button class="carousel-btn carousel-prev" aria-label="Previous slide">&lt;</button>
-                    <button class="carousel-btn carousel-next" aria-label="Next slide">&gt;</button>
-                    <div class="carousel-dots" role="tablist" aria-label="Carousel navigation">
-                        <span class="dot active" role="tab" aria-selected="true" aria-label="Slide 1"></span>
-                        <span class="dot" role="tab" aria-selected="false" aria-label="Slide 2"></span>
-                        <span class="dot" role="tab" aria-selected="false" aria-label="Slide 3"></span>
+                    <div class="carousel-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
                     </div>
                 </div>
             </div>
@@ -138,26 +278,64 @@
         <!-- Contact Section -->
         <section class="contact" id="contact">
             <div class="container">
-                <h2 class="section-title">Contact Us</h2>
                 <div class="contact-content">
-                    <form class="contact-form" novalidate>
-                        <div class="form-group">
-                            <label for="name">Name *</label>
-                            <input type="text" id="name" name="name" required aria-describedby="name-error">
-                            <div id="name-error" class="error-message" aria-live="polite"></div>
+                    <div class="contact-form-section">
+                        <h2 class="contact-title">Leave ME Your Info</h2>
+                        <form class="contact-form">
+                            <div class="form-group">
+                                <label for="fullName">Your Full Name (Required)</label>
+                                <input type="text" id="fullName" name="fullName" value="Chaitanya Mamillapalli" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Your Email (Required)</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" name="subject">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Your Message</label>
+                                <textarea id="message" name="message" rows="5"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn">SEND MESSAGE</button>
+                        </form>
+                    </div>
+                    <div class="contact-info-section">
+                        <h2 class="contact-title">Contact Information</h2>
+                        <div class="contact-cards">
+                            <div class="contact-card">
+                                <div class="contact-icon location-icon">
+                                    <img src="assets/icons/location.svg" alt="Location">
+                                </div>
+                                <div class="contact-details">
+                                    <p><strong>Country:</strong> Bangladesh</p>
+                                    <p><strong>City:</strong> Dhaka</p>
+                                    <p><strong>Street:</strong> 35 Vhatara, Badda</p>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-icon email-icon">
+                                    <img src="assets/icons/email.svg" alt="Email">
+                                </div>
+                                <div class="contact-details">
+                                    <p><strong>Email:</strong> Youremail@Gmail.Com</p>
+                                    <p><strong>Skype:</strong> @Yourusername</p>
+                                    <p><strong>Telegram:</strong> @Yourusername</p>
+                                </div>
+                            </div>
+                            <div class="contact-card">
+                                <div class="contact-icon phone-icon">
+                                    <img src="assets/icons/phone.svg" alt="Phone">
+                                </div>
+                                <div class="contact-details">
+                                    <p><strong>Support Services:</strong> 15369</p>
+                                    <p><strong>Office:</strong> +58 (021)356 587 235</p>
+                                    <p><strong>Personal:</strong> +58 (021)356 587 235</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" required aria-describedby="email-error">
-                            <div id="email-error" class="error-message" aria-live="polite"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" rows="5" required aria-describedby="message-error"></textarea>
-                            <div id="message-error" class="error-message" aria-live="polite"></div>
-                        </div>
-                        <button type="submit" class="submit-btn">Send Message</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </section>
@@ -167,45 +345,104 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
-                    <h3>JTG</h3>
-                    <p>Your trusted partner in digital solutions</p>
+                <div class="footer-logos">
+                    <div class="logo-item">
+                        <div class="logo-number">3</div>
+                        <div class="logo-text">
+                            <div>eerrate</div>
+                            <small>TEXT BASED LOGO</small>
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-monogram">GL</div>
+                        <div class="logo-text">
+                            <div>GOVIND</div>
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-circle">B</div>
+                        <div class="logo-text">
+                            <div>Genrate</div>
+                            <small>TEXT BASED</small>
+                        </div>
+                    </div>
+                    <div class="logo-item">
+                        <div class="logo-number">3</div>
+                        <div class="logo-text">
+                            <div>Generate</div>
+                            <small>SOFTWARE</small>
+                        </div>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p>Email: info@jtg.com</p>
-                    <p>Phone: +1 234 567 890</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Follow Us</h4>
-                    <p>Stay connected with us on social media</p>
+                <div class="footer-main">
+                    <div class="footer-left">
+                        <div class="glasses-icon">
+                            <img src="assets/images/logo/logo.svg" alt="Glasses Icon">
+                        </div>
+                        <div class="rating-blocks">
+                            <div class="rating-block blue">
+                                <div class="rating-icon">P</div>
+                                <div class="rating-text">Sourigno.cou</div>
+                                <div class="rating-score">4.5/5 Rating On Lorem</div>
+                            </div>
+                            <div class="rating-block purple">
+                                <div class="rating-icon">n</div>
+                                <div class="rating-text">Fiverr Bute</div>
+                                <div class="rating-score">9/10 Rating On Ipsum</div>
+                            </div>
+                            <div class="rating-block teal">
+                                <div class="rating-icon">▶</div>
+                                <div class="rating-text">Fiverr Bute</div>
+                                <div class="rating-score">4.5/5 Rating On Dorel</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-center">
+                        <div class="quick-links">
+                            <h4>Quick Links</h4>
+                            <ul>
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#skills">Skills</a></li>
+                                <li><a href="#education">Education</a></li>
+                                <li><a href="#projects">Projects</a></li>
+                                <li><a href="#recommendations">Recommendations</a></li>
+                            </ul>
+                        </div>
+                        <div class="portfolio">
+                            <h4>Portfolio</h4>
+                            <ul>
+                                <li>Frontend Development</li>
+                                <li>Backend Development</li>
+                                <li>Website Design</li>
+                                <li>Machine Learning</li>
+                                <li>Problem Solving & DSA</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="footer-right">
+                        <h4>Connect</h4>
+                        <div class="social-links">
+                            <a href="#" class="social-link linkedin">
+                                <img src="assets/icons/linkedin.svg" alt="LinkedIn">
+                                LinkedIn
+                            </a>
+                            <a href="#" class="social-link instagram">
+                                <img src="assets/icons/instagram.svg" alt="Instagram">
+                                Instagram
+                            </a>
+                            <a href="#" class="social-link facebook">
+                                <img src="assets/icons/facebook.svg" alt="Facebook">
+                                Facebook
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 JTG. All rights reserved.</p>
+                <p>&copy; 2024 Copyright, All Right Reserved</p>
             </div>
         </div>
     </footer>
-
-    <!-- Modal -->
-    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-body">
-        <div class="modal-content">
-            <span class="modal-close" aria-label="Close modal">&times;</span>
-            <h2 class="modal-title" id="modal-title">Modal Title</h2>
-            <div class="modal-body" id="modal-body">
-                <p>This is the modal content. You can add any content here.</p>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript -->
     <script src="js/main.js"></script>
