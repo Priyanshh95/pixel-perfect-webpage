@@ -1,7 +1,188 @@
 /**
- * Validation and Testing Module
- * Comprehensive testing for all website functionality
+ * Enhanced Form Validation and Testing Module
+ * Comprehensive form validation and testing for all website functionality
  */
+
+class FormValidator {
+    constructor() {
+        this.form = document.querySelector('.contact-form');
+        this.errorMessages = {
+            name: {
+                required: 'Name is required',
+                minLength: 'Name must be at least 2 characters long'
+            },
+            email: {
+                required: 'Email is required',
+                invalid: 'Please enter a valid email address'
+            },
+            message: {
+                required: 'Message is required',
+                minLength: 'Message must be at least 10 characters long'
+            }
+        };
+        
+        this.init();
+    }
+
+    init() {
+        if (this.form) {
+            this.setupValidation();
+            this.setupRealTimeValidation();
+        }
+    }
+
+    setupValidation() {
+        this.form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (this.validateForm()) {
+                this.submitForm();
+            }
+        });
+    }
+
+    setupRealTimeValidation() {
+        const inputs = this.form.querySelectorAll('input, textarea');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                this.validateField(input);
+            });
+            
+            input.addEventListener('input', () => {
+                this.clearFieldError(input);
+            });
+        });
+    }
+
+    validateForm() {
+        const inputs = this.form.querySelectorAll('input, textarea');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!this.validateField(input)) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+
+    validateField(field) {
+        const value = field.value.trim();
+        const fieldName = field.name;
+        let isValid = true;
+
+        // Clear previous errors
+        this.clearFieldError(field);
+
+        // Required validation
+        if (field.hasAttribute('required') && !value) {
+            this.showFieldError(field, this.errorMessages[fieldName].required);
+            isValid = false;
+        }
+
+        // Specific field validations
+        if (value) {
+            switch (fieldName) {
+                case 'name':
+                    if (value.length < 2) {
+                        this.showFieldError(field, this.errorMessages.name.minLength);
+                        isValid = false;
+                    }
+                    break;
+                    
+                case 'email':
+                    if (!this.isValidEmail(value)) {
+                        this.showFieldError(field, this.errorMessages.email.invalid);
+                        isValid = false;
+                    }
+                    break;
+                    
+                case 'message':
+                    if (value.length < 10) {
+                        this.showFieldError(field, this.errorMessages.message.minLength);
+                        isValid = false;
+                    }
+                    break;
+            }
+        }
+
+        // Update field styling
+        if (isValid) {
+            field.classList.remove('error');
+            field.classList.add('valid');
+        } else {
+            field.classList.remove('valid');
+            field.classList.add('error');
+        }
+
+        return isValid;
+    }
+
+    showFieldError(field, message) {
+        const errorElement = document.getElementById(`${field.name}-error`);
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+    }
+
+    clearFieldError(field) {
+        const errorElement = document.getElementById(`${field.name}-error`);
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+        }
+        field.classList.remove('error', 'valid');
+    }
+
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    submitForm() {
+        const submitBtn = this.form.querySelector('.submit-btn');
+        const originalText = submitBtn.textContent;
+        
+        // Disable submit button
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+        
+        // Simulate form submission
+        setTimeout(() => {
+            this.showSuccessMessage();
+            this.form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            
+            // Clear all field states
+            const inputs = this.form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.classList.remove('error', 'valid');
+                this.clearFieldError(input);
+            });
+        }, 2000);
+    }
+
+    showSuccessMessage() {
+        const successContent = `
+            <div class="success-message">
+                <div class="success-icon">✓</div>
+                <h3>Message Sent Successfully!</h3>
+                <p>Thank you for contacting us. We'll get back to you soon.</p>
+                <button class="btn-primary" onclick="modal.close()">Close</button>
+            </div>
+        `;
+        
+        if (window.modal) {
+            window.modal.open('Success', successContent, 'success');
+        } else {
+            alert('Message sent successfully!');
+        }
+    }
+}
 
 class WebsiteValidator {
     constructor() {
@@ -387,8 +568,12 @@ class WebsiteValidator {
     }
 }
 
-// Initialize validator when DOM is loaded
+// Initialize validators when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize form validator
+    window.formValidator = new FormValidator();
+    
+    // Initialize website validator
     window.websiteValidator = new WebsiteValidator();
     
     // Auto-run validation in development mode
@@ -400,5 +585,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Make validator globally available
+// Make validators globally available
+window.FormValidator = FormValidator;
 window.WebsiteValidator = WebsiteValidator; 
